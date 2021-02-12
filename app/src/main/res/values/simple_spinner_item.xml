@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mail_provider">
+        <item>outlook.com</item>
+        <item>gmail.com</item>
+    </string-array>
+</resources>
