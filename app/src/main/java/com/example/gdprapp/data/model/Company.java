@@ -1,20 +1,31 @@
 package com.example.gdprapp.data.model;
 
-public class Company {
-    String name;
-    String email;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public Company(String name, String email) {
+import java.io.Serializable;
+
+public class Company implements Serializable {
+
+    final String name;
+    final String email;
+
+    @JsonCreator
+    public Company(@JsonProperty("name") String name, @JsonProperty("email") String email) {
         this.name = name;
         this.email = email;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 
     @Override
     public String toString() {
-        return "Company{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return name;
     }
 }

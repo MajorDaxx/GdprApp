@@ -1,4 +1,4 @@
-package com.example.gdprapp;
+package com.example.gdprapp.ui.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,15 +6,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.gdprapp.R;
+import com.example.gdprapp.ui.companylist.SendMailsActivity;
 import com.example.gdprapp.data.LoginDataSource;
 import com.example.gdprapp.data.LoginRepository;
 import com.example.gdprapp.data.Result;
 import com.example.gdprapp.data.model.LoggedInUser;
 import com.example.gdprapp.ui.login.MailLogin;
+
+import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,9 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         //dirty code :D
         if (is_loggedin(result instanceof Result.Success)){
+
             LoggedInUser l = (LoggedInUser) ((Result.Success) result).getData();
             System.err.println(l.getEmail());
-            TextView tx = (TextView) findViewById(R.id.textView2);
+            TextView tx = (TextView) findViewById(R.id.loggedin_txt);
             tx.setText(l.getEmail());
         }
 
@@ -55,7 +61,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean is_loggedin(boolean loggedin) {
 
         Button register_btn = (Button) findViewById(R.id.register_btn);
-        register_btn.setEnabled(!loggedin);
+        if(loggedin){
+            register_btn.setText("Reregister");
+        }else{
+            register_btn.setText("Register");
+        }
 
         Button send_mail = (Button) findViewById(R.id.start_btn);
         send_mail.setEnabled(loggedin);
@@ -63,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void start(View view) {
+    public void send_mails(View view) {
         Intent intent = new Intent(this, SendMailsActivity.class);
         startActivity(intent);
     }

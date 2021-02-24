@@ -1,11 +1,13 @@
 package com.example.gdprapp.data;
 
-import android.app.Activity;
-import android.content.Context;
+import android.util.Log;
 
-import com.example.gdprapp.MainActivity;
 import com.example.gdprapp.data.model.LoggedInUser;
-import com.example.gdprapp.ui.login.MailLogin;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -19,8 +21,9 @@ public class LoginRepository {
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
-    private LoggedInUser user = null;
+    private Map<String,LoggedInUser> users = new HashMap<>();
 
+    private LoggedInUser user = null;
     // private constructor : singleton access
     private LoginRepository(LoginDataSource dataSource) {
         this.dataSource = dataSource;
@@ -57,7 +60,7 @@ public class LoginRepository {
             return new Result.Success<LoggedInUser>(user);
         }
 
-        Result<LoggedInUser> result = dataSource.login();
+        Result<LoggedInUser> result = dataSource.load();
 
         if (result instanceof Result.Success) {
             setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
@@ -65,13 +68,21 @@ public class LoginRepository {
         return result;
     }
 
-    public Result<LoggedInUser> login(String username, String password) {
+    public void login(String email, String password, Properties properties) {
         // handle login
-        Result<LoggedInUser> result = dataSource.login(username, password);
+        LoggedInUser l = new LoggedInUser(email,password,properties);
 
-        if (result instanceof Result.Success) {
-            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
-        }
-        return result;
+        Log.d(LoginRepository.class.getName(),"store User");
+        dataSource.store(l); //Store if validation is sucessfull
+        users.put(l.getEmail(),l); //store User in local cach anyway
+        user = l;
+    }
+
+    public boolean hasMails(){
+        return users.size() > 0;
+    }
+
+    public Set<String> getEmails() {
+        return users.keySet();
     }
 }

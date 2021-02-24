@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="def">
+        <item>mail.smtp.host|domain.com</item>
+        <item>mail.smtp.port|25</item>
+        <item>mail.smtp.starttls.enable|true</item>
+        <item>mail.smtp.auth|true</item>
+    </string-array>
+
+    <string-array name="outlook">
+        <item>mail.smtp.host|outlook.com</item>
+        <item>mail.smtp.port|123</item>
+        <item>mail.smtp.starttls.enable|true</item>
+        <item>mail.smtp.auth|true</item>
+    </string-array>
+
+    <string-array name="gmail">
+        <item>mail.smtp.host|gmail.com</item>
+        <item>mail.smtp.port|1234</item>
+        <item>mail.smtp.starttls.enable|true</item>
+        <item>mail.smtp.auth|true</item>
+    </string-array>
+</resources>

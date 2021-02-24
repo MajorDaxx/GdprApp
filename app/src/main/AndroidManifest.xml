@@ -11,14 +11,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GdprApp">
-        <activity
-            android:name=".SendMailsActivity"
+        <activity android:name=".ui.detailmail.MailBuilder"
+            android:label="@string/title_activity_mail_builder"
+            android:theme="@style/Theme.GdprApp.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.companylist.SendMailsActivity" />
+        </activity>
+        <activity android:name=".ui.companylist.SendMailsActivity"
             android:label="@string/title_activity_send_mails"
-            android:theme="@style/Theme.GdprApp.NoActionBar"></activity>
-        <activity
-            android:name=".ui.login.MailLogin"
-            android:label="@string/title_activity_mail_login"></activity>
-        <activity android:name=".MainActivity">
+            android:theme="@style/Theme.GdprApp.NoActionBar" >
+        </activity>
+        <activity android:name=".ui.login.MailLogin"
+            android:label="@string/title_activity_mail_login"
+            android:windowSoftInputMode="adjustResize" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
+        </activity>
+        <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

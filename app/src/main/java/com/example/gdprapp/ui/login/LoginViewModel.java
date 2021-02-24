@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import android.util.Log;
 import android.util.Patterns;
 
 import com.example.gdprapp.data.LoginRepository;
@@ -11,11 +12,14 @@ import com.example.gdprapp.data.Result;
 import com.example.gdprapp.data.model.LoggedInUser;
 import com.example.gdprapp.R;
 
+import java.util.Properties;
+
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
+    private Properties defaultProperties = new Properties();
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
@@ -29,16 +33,23 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public void login(String username, String password) {
+    public void login(String username, String password,Properties p) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        Properties merge = new Properties();
+        merge.putAll(defaultProperties);
+        merge.putAll(p); // User input overwrites defaults
 
+        //Result<LoggedInUser> result =
+        loginRepository.login(username, password,p);
+
+        /**
         if (result instanceof Result.Success) {
             LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getPassword())));
+            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getPassword())));  //?
         } else {
             loginResult.setValue(new LoginResult(R.string.login_failed));
         }
+         */
     }
 
     public void loginDataChanged(String username, String password) {
@@ -47,6 +58,7 @@ public class LoginViewModel extends ViewModel {
         } else if (!isPasswordValid(password)) {
             loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
         } else {
+            setMailDefaults(username);
             loginFormState.setValue(new LoginFormState(true));
         }
     }
@@ -62,6 +74,35 @@ public class LoginViewModel extends ViewModel {
 
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
+        return password != null;
+    }
+
+    //TODO Genaralisieren of Default providers
+    private void setMailDefaults(String email) {
+        Log.d("LoginViewModel",email);
+        switch (email.split("@")[1]) {
+            case "outlook.com":
+                defaultProperties.put("mail.smtp.host","smtp-mail.outlook.com");
+                defaultProperties.put("mail.smtp.port","587");
+                defaultProperties.put("mail.smtp.starttls.enable","true");
+                defaultProperties.put("mail.smtp.auth","true");
+                break;
+            case "gmail.com":
+                defaultProperties.put("mail.smtp.host","smtp.gmail.com");
+                defaultProperties.put("mail.smtp.port","587");
+                defaultProperties.put("mail.smtp.starttls.enable","true");
+                defaultProperties.put("mail.smtp.auth","true");
+                break;
+            default:
+                defaultProperties.put("mail.smtp.host","domain.com");
+                defaultProperties.put("mail.smtp.port","587");
+                defaultProperties.put("mail.smtp.starttls.enable","true");
+                defaultProperties.put("mail.smtp.auth","true");
+
+        }
+    }
+
+    public Properties getProperties() {
+        return defaultProperties;
     }
 }
